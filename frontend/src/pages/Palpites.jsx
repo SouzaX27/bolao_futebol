@@ -108,12 +108,33 @@ function Palpites() {
   }
 
   // Função auxiliar para garantir a URL completa da imagem
-  function obterUrlEscudo(caminhoEscudo) {
-    if (!caminhoEscudo) return "";
-    return caminhoEscudo.startsWith("http")
-      ? caminhoEscudo
-      : `http://127.0.0.1:8000${caminhoEscudo}`;
-  }
+//   function obterUrlEscudo(caminhoEscudo) {
+//     if (!caminhoEscudo) return "";
+//     return caminhoEscudo.startsWith("http")
+//       ? caminhoEscudo
+//       : `http://127.0.0.1:8000${caminhoEscudo}`;
+//   }
+
+function obterUrlEscudo(caminhoEscudo) {
+  if (!caminhoEscudo) return "";
+  
+  // Se a URL já vier completa da API, apenas retorna
+  if (caminhoEscudo.startsWith("http")) return caminhoEscudo;
+
+  // Pega a URL do backend configurada na variável de ambiente do Vite
+  let baseUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
+  // Remove o "/api" do final se ele existir (ex: transforma "...onrender.com/api" em "...onrender.com")
+  baseUrl = baseUrl.replace(/\/api\/?$/, "");
+
+  // Limpa as barras para evitar barras duplas (//)
+  const urlLimpa = baseUrl.replace(/\/$/, "");
+  const caminhoLimpo = caminhoEscudo.startsWith("/") ? caminhoEscudo : `/${caminhoEscudo}`;
+
+  return `${urlLimpa}${caminhoLimpo}`;
+}
+
+//////////////////
 
   return (
     <Container className="py-4">
