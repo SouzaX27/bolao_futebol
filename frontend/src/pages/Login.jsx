@@ -160,7 +160,7 @@ function Login() {
 
                             <Form.Label>
 
-                                Nome / Nickname
+                                Nome
 
                             </Form.Label>
 
@@ -183,9 +183,9 @@ function Login() {
                                     }
                                 }
 
-                                placeholder="
-                                    Ex: Gustavo
-                                "
+                                // placeholder="
+                                //     Ex: Gustavo
+                                // "
 
                             />
 

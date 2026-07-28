@@ -58,14 +58,14 @@ function Navbar() {
                         </Nav.Link>
 
 
-                        <Nav.Link
-                            as={Link}
-                            to="/admin"
-                        >
+                            {/* <Nav.Link
+                                as={Link}
+                                to="/admin"
+                            >
 
-                            Admin
+                                Admin
 
-                        </Nav.Link>
+                            </Nav.Link> */}
 
                     </Nav>
 
