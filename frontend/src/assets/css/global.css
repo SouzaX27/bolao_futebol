@@ -1,0 +1,10 @@
+.bola {
+    height: 2rem;
+    width: auto;
+    transition: 2.0s ease;
+}
+
+.bola:hover {
+    rotate: calc(360deg);
+
+}
