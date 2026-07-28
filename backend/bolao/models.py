@@ -28,11 +28,13 @@ class Time(models.Model):
         blank=True
     )
 
-    escudo = models.ImageField(
-        upload_to="escudos/",
-        blank=True,
-        null=True
-    )
+    # escudo = models.ImageField(
+    #     upload_to="escudos/",
+    #     blank=True,
+    #     null=True
+    # )
+
+    escudo = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.nome
