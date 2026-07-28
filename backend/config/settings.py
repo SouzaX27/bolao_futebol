@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     # O CorsMiddleware deve vir o mais alto possível, logo antes do CommonMiddleware
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve estáticos em produção
     "corsheaders.middleware.CorsMiddleware",
@@ -56,6 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://bolaofutebol.netlify.app"
 ]
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL')
