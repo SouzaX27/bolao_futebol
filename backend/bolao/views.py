@@ -380,78 +380,61 @@ class MeusPalpitesView(APIView):
 class RankingView(APIView):
 
     def get(self, request):
+        rodada = request.query_params.get("rodada")
 
+        # Filtro base para os palpites
+        filtro_palpites = Q()
+
+        if rodada:
+            try:
+                rodada_int = int(rodada)
+                filtro_palpites &= Q(palpites__jogo__rodada=rodada_int)
+            except ValueError:
+                return Response(
+                    {"erro": "Rodada inválida."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        # Consulta anotando a pontuação e métricas de acordo com o filtro
         usuarios = Usuario.objects.annotate(
-
             pontos_totais=Sum(
-                "palpites__pontos"
+                "palpites__pontos",
+                filter=filtro_palpites
             ),
-
             acertos_exatos=Count(
                 "palpites",
-                filter=Q(
-                    palpites__pontos=3
-                )
+                filter=filtro_palpites & Q(palpites__pontos=3)
             ),
-
             acertos_simples=Count(
                 "palpites",
-                filter=Q(
-                    palpites__pontos=1
-                )
+                filter=filtro_palpites & Q(palpites__pontos=1)
             ),
-
             total_palpites=Count(
-                "palpites"
+                "palpites",
+                filter=filtro_palpites
             )
-
         ).order_by(
-
             "-pontos_totais",
-
             "-acertos_exatos",
-
             "nome"
-
         )
 
         resultado = []
 
-        for posicao, usuario in enumerate(
-            usuarios,
-            start=1
-        ):
-
+        for posicao, usuario in enumerate(usuarios, start=1):
             resultado.append(
                 {
-
-                    "posicao":
-                    posicao,
-
-                    "usuario_id":
-                    usuario.id,
-
-                    "nome":
-                    usuario.nome,
-
-                    "pontos_totais":
-                    usuario.pontos_totais or 0,
-
-                    "acertos_exatos":
-                    usuario.acertos_exatos,
-
-                    "acertos_simples":
-                    usuario.acertos_simples,
-
-                    "total_palpites":
-                    usuario.total_palpites
-
+                    "posicao": posicao,
+                    "usuario_id": usuario.id,
+                    "nome": usuario.nome,
+                    "pontos_totais": usuario.pontos_totais or 0,
+                    "acertos_exatos": usuario.acertos_exatos,
+                    "acertos_simples": usuario.acertos_simples,
+                    "total_palpites": usuario.total_palpites
                 }
             )
 
-        return Response(
-            resultado
-        )
+        return Response(resultado)
 
 
 class CalcularPontosView(APIView):

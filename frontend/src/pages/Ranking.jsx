@@ -7,7 +7,8 @@ import {
     Container,
     Table,
     Spinner,
-    Alert
+    Alert,
+    Form
 } from "react-bootstrap";
 
 import api from "../services/api";
@@ -19,6 +20,12 @@ function Ranking() {
         ranking,
         setRanking
     ] = useState([]);
+
+
+    var [
+        rodada,
+        setRodada
+    ] = useState("geral");
 
 
     var [
@@ -35,18 +42,30 @@ function Ranking() {
 
         },
 
-        []
+        [rodada]
 
     );
 
 
     async function carregarRanking() {
 
+        setCarregando(true);
+
         try {
+
+            var params = {};
+
+            if (rodada !== "geral") {
+
+                params.rodada = rodada;
+
+            }
+
 
             var resposta =
                 await api.get(
-                    "/ranking/"
+                    "/ranking/",
+                    { params: params }
                 );
 
 
@@ -78,19 +97,81 @@ function Ranking() {
             className="py-4"
         >
 
-            <h1
-                className="mb-4"
+            <div
+                className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2"
             >
 
-                🏆 Ranking
+                <h1
+                    className="m-0"
+                >
 
-            </h1>
+                    🏆 Ranking
+
+                </h1>
+
+
+                {/* Seletor de Rodadas */}
+                <Form.Group
+                    className="d-flex align-items-center gap-2"
+                >
+
+                    <Form.Label
+                        className="m-0 fw-bold"
+                    >
+
+                        Rodada:
+
+                    </Form.Label>
+
+
+                    <Form.Select
+
+                        value={rodada}
+
+                        onChange={
+                            function(e) {
+                                setRodada(e.target.value);
+                            }
+                        }
+
+                        style={{ width: "180px" }}
+
+                    >
+
+                        <option value="geral">
+                            Geral (Acumulado)
+                        </option>
+
+                        {Array.from({ length: 38 }, function(_, index) {
+
+                            var numRodada = index + 1;
+
+                            return (
+
+                                <option
+                                    key={numRodada}
+                                    value={numRodada}
+                                >
+
+                                    Rodada {numRodada}
+
+                                </option>
+
+                            );
+
+                        })}
+
+                    </Form.Select>
+
+                </Form.Group>
+
+            </div>
 
 
             {carregando ? (
 
                 <div
-                    className="text-center"
+                    className="text-center py-5"
                 >
 
                     <Spinner />
@@ -103,8 +184,7 @@ function Ranking() {
                     variant="info"
                 >
 
-                    Ainda não existem
-                    participantes.
+                    Ainda não existem participantes ou palpites registrados nesta seleção.
 
                 </Alert>
 
