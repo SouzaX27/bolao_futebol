@@ -34,6 +34,7 @@ class Time(models.Model):
     #     null=True
     # )
 
+    
     escudo = models.URLField(blank=True, null=True)
 
     def __str__(self):
